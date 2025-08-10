@@ -6,7 +6,7 @@ res.json(tasks);
 } catch (error) {  
 res.status(500).json({ message: error.message });  
 }  
-}; 
+};
 
 const addTask = async (req, res) => { 
 const { title, description, deadline } = req.body; 
@@ -46,5 +46,4 @@ res.json({ message: 'Task deleted' });
 res.status(500).json({ message: error.message }); 
 }
  }; 
-module.exports = { getTasks, addTask, updateTask, deleteTask }; 
-
+module.exports = { getTasks, addTask, updateTask, deleteTask };
