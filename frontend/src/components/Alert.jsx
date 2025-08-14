@@ -10,7 +10,7 @@ export default function AlertModal({ items, onClose, onView }) {
         <ul>
           {items.map((it) => (
             <li key={it._id}>
-              <strong>{it.name}</strong> (SKU: {it.sku}) — Qty {it.quantity} / Reorder {it.reorderLevel}
+              <strong>{it.name}</strong> Qty {it.quantity} - Reorder {it.reorderLevel}
             </li>
           ))}
         </ul>

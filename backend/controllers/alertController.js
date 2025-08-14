@@ -53,4 +53,13 @@ const deleteItem = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-module.exports = { getItems, addItem, updateItem, deleteItem };
+function isLowStock(item) {
+  return item.quantity <= item.reorderLevel;
+};
+const lowStock=async(req,res)=>{
+  const items = await Item.find({ });
+  const low = items.filter(isLowStock);
+  res.json(low);
+};
+module.exports = { getItems, addItem, updateItem, deleteItem,lowStock };
+
