@@ -44,7 +44,7 @@ const ItemList = ({ items, setItems, setEditingItem }) => {
 
   return (
     <div className="container">
-      <h2>Inventory</h2>
+      
       {/* <div className="card" style={{ marginBottom: '1rem' }}>
         <form onSubmit={onSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '.5rem' }}>
           <input className="input" placeholder="Name" value={form.name} onChange={(e) => setEditingItem({ ...form, name: e.target.value })} />
@@ -56,10 +56,11 @@ const ItemList = ({ items, setItems, setEditingItem }) => {
         </form>
       </div> */}
 
-      <div className="card">
-        <table className="table">
+      <div className="card bg-white p-6 shadow-md rounded mb-6">
+        <h2 className='text-2xl font-bold mb-4'>Inventory</h2>
+        <table className="table" style={{width:"100%"}}>
           <thead>
-            <tr>
+            <tr style={{textAlign:'left'}}>
               <th>Name</th><th>Qty</th><th>Reorder</th><th>Unit</th><th>Supplier</th><th>Actions</th>
             </tr>
           </thead>
@@ -77,8 +78,8 @@ const ItemList = ({ items, setItems, setEditingItem }) => {
                 <td>
                   {/* <button className="btn" onClick={() => updateQty(it, +1)}>+1</button>
                   <button className="btn secondary" onClick={() => updateQty(it, -1)} style={{ marginLeft: '.5rem' }}>-1</button> */}
-                  <button className="btn secondary" onClick={() => setEditingItem(it)} style={{ marginLeft: '.5rem', background: '#96a7ddff' }}>Edit</button>
-                  <button className="btn secondary" onClick={() => handleDelete(it._id)} style={{ marginLeft: '.5rem', background: '#dd9696ff' }}>Delete</button>
+                  <button className="btn secondary" onClick={() => setEditingItem(it)} style={{ padding:'0.3rem', background: '#96a7ddff' }}>Edit</button>
+                  <button className="btn secondary" onClick={() => handleDelete(it._id)} style={{ marginLeft: '.5rem',padding:'0.3rem', background: '#dd9696ff' }}>Delete</button>
                 </td>
               </tr>
             ))}
