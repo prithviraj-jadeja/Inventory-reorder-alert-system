@@ -1,9 +1,7 @@
-import { useNavigate } from 'react-router-dom';
 import useAlerts from '../components/useAlerts';
 import AlertModal from '../components/Alert';
 
 export default function Dashboard() {
-  const navigate = useNavigate();
   const low = useAlerts(true);
   const close = () => {
     const el = document.querySelector('.modal-backdrop');
@@ -11,8 +9,8 @@ export default function Dashboard() {
   };
   return (
     <div className="container">
-      <h2>Dashboard</h2>
-      <p>Welcome! Manage your inventory and keep an eye on low stock items.</p>
+      <h2 className='text-3xl font-bold mb-4 ml-2 mt-3'>Dashboard</h2>
+      <h2 className='text-xl font-bold mb-4 ml-2'>Welcome! Manage your inventory and keep an eye on low stock items.</h2>
       <AlertModal items={low} onClose={close} />
     </div>
   );

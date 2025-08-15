@@ -79,7 +79,7 @@ const ItemForm = ({ items, setItems, editingItem, setEditingItem }) => {
         onChange={(e) => setFormData({ ...formData, supplier: e.target.value })}
         className="w-full mb-4 p-2 border rounded"
       />
-      <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
+      <button type="submit" className="w-full bg-gray-600 text-white p-2 rounded">
         {editingItem ? 'Update Item' : 'Add Item'}
       </button>
     </form>
