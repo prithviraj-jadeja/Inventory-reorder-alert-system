@@ -24,4 +24,4 @@ export default function AlertModal({ items, onClose, onView }) {
       </div>
     </div>
   );
-}
+ }
