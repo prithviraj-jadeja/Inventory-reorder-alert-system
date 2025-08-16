@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
+import loginImg from './image1.svg'
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -18,8 +19,9 @@ const Register = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20">
-      <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded">
+    <div className="mx-auto mt-20 bg-gray-100 p-6 shadow-md rounded" style={{display:'flex', width:'80%', alignItems:'center'}}>
+      <img src={loginImg} alt="login-image" style={{width:'50%',height:'400px'}}></img>
+      <form onSubmit={handleSubmit} >
         <h1 className="text-2xl font-bold mb-4 text-center">Register</h1>
         <input
           type="text"
