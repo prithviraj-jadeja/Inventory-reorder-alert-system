@@ -4,7 +4,7 @@ export default function AlertModal({ items, onClose, onView }) {
     <div className="modal-backdrop" role="dialog" aria-modal="true">
       <div className="modal card bg-gray-100 p-6 shadow-md rounded ml-5">
         <h3 className='text-xl font-bold mb-3' style={{color:'red'}}>Low Stock Alerts</h3>
-        <p className='text-xl mb-3'> The following items are at or below their reorder level:</p>
+        <p className='text-xl mb-3'> The following items are at or below their reorder level: </p>
         <table className="table" style={{width:"100%"}}>
           <thead>
             <tr style={{textAlign:'left'}}>
