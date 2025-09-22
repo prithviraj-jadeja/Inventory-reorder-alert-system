@@ -10,8 +10,12 @@
   "devDependencies": {
     "chai": "^5.1.2",
     "concurrently": "^7.0.0",
-    "mocha": "^11.0.1"
+    "mocha": "^11.0.1",
+    "sinon": "^21.0.0"
   },
   "author": "Inventory Manager Team",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "react-icons": "^5.5.0"
+  }
 }
