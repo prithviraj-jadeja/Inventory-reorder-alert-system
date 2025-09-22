@@ -11,8 +11,12 @@ import Dashboard from './pages/Dashboard';
 function App() {
   return (
     <Router>
+    <div className="flex flex-col min-h-screen">
+
       <Navbar />
       
+      <main className="flex-grow">
+
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -21,7 +25,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
      
+      </main>
       <Footer />
+    </div>
     </Router>
   );
 }
