@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Items from './pages/Items';
 import Dashboard from './pages/Dashboard';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/items" element={<Items />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/" element={<LandingPage />} />
       </Routes>
       </main>
       
