@@ -24,8 +24,8 @@ function App() {
         <Route path="/items" element={<Items />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-     
       </main>
+      
       <Footer />
     </div>
     </Router>
