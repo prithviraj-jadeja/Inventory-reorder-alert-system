@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-500 text-white p-4 flex justify-between items-center">
+    <nav className="bg-gradient-to-r from-cyan-700 to-cyan-500 text-white p-4 flex justify-between items-center">
       <Link to="/dashboard" className="text-2xl font-bold">Inventory Reorder Alert System</Link>
       <div>
         {user ? (
