@@ -16,7 +16,7 @@ app.use('/api/items', require('./routes/itemRoutes'));
 
 // Export the app object for testing
 if (require.main === module) {
-    connectDB();
+    connectDB.connect();
     // If the file is run directly, start the server
     const PORT = process.env.PORT || 5001;
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
@@ -24,3 +24,6 @@ if (require.main === module) {
 
 
 module.exports = app
+
+
+
