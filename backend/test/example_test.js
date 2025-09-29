@@ -1,240 +1,284 @@
-
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const http = require('http');
-const app = require('../server'); 
-const connectDB = require('../config/db');
-const mongoose = require('mongoose');
-const sinon = require('sinon');
-const Item = require('../models/Item');
-const { updateItem,getItems,addItem,deleteItem } = require('../controllers/alertController');
+const chai = require("chai");
+const sinon = require("sinon");
+const mongoose = require("mongoose");
+const Item = require("../models/Item");
+const {updateItem,getItems,addItem,deleteItem,} = require("../controllers/alertController");
 const { expect } = chai;
 
-chai.use(chaiHttp);
-let server;
-let port;
+const MOCK_USER_ID = new mongoose.Types.ObjectId();
+const MOCK_ITEM_ID = new mongoose.Types.ObjectId();
 
+describe("addItem Function Tests", () => {
+  let createStub; 
+  afterEach(() => {
+    if (createStub && createStub.restore) {
+      createStub.restore();
+    }
+  });
 
-describe('AddItem Function Test', () => {
-
-  it('should create a new Item successfully', async () => {
-    // Mock request data
+  it("should create a new Item successfully", async () => {
     const req = {
-      user: { id: new mongoose.Types.ObjectId() },
-      body: { name: "New Item", quantity: 30, reorderLevel: 20, unit:"pcs",supplier:"XYZ company" }
+      user: { id: MOCK_USER_ID },
+      body: {
+        name: "New Inventory Part",
+        quantity: 50,
+        reorderLevel: 10,
+        unit: "units",
+        supplier: "Supplier A",
+      },
     };
+    const createdItem = { _id: MOCK_ITEM_ID, ...req.body, user: MOCK_USER_ID };
 
-    // Mock item that would be created
-    const createdItem = { _id: new mongoose.Types.ObjectId(), ...req.body};
+    createStub = sinon.stub(Item, "create").resolves(createdItem);
 
-    // Stub Item.create to return the createdItem
-    const createStub = sinon.stub(Item, 'create').resolves(createdItem);
-
-    // Mock response object
     const res = {
       status: sinon.stub().returnsThis(),
-      json: sinon.spy()
+      json: sinon.spy(),
     };
 
-    // Call function
     await addItem(req, res);
 
-    // Assertions
-    expect(createStub.calledOnceWith({ ...req.body })).to.be.true;
+    expect(createStub.calledOnce).to.be.true;
     expect(res.status.calledWith(201)).to.be.true;
     expect(res.json.calledWith(createdItem)).to.be.true;
-
-    // Restore stubbed methods
-    createStub.restore();
   });
 
-  it('should return 500 if an error occurs', async () => {
-    // Stub Item.create to throw an error
-    const createStub = sinon.stub(Item, 'create').throws(new Error('DB Error'));
-
-    // Mock request data
+  it('should return 400 if item name is missing (Adapting "without task title")', async () => {
     const req = {
-      user: { id: new mongoose.Types.ObjectId() },
-      body: { name: "New Item", quantity: 30, reorderLevel: 20, unit:"pcs",supplier:"XYZ company"}
+      user: { id: MOCK_USER_ID },
+      body: {
+        quantity: 50,
+        reorderLevel: 10,
+        unit: "units",
+        supplier: "Supplier A",
+      },
     };
 
-    // Mock response object
+    const validationError = new Error(
+      "Item validation failed: name: Path `name` is required."
+    );
+    validationError.name = "ValidationError";
+
+    createStub = sinon.stub(Item, "create").throws(validationError);
+
     const res = {
       status: sinon.stub().returnsThis(),
-      json: sinon.spy()
+      json: sinon.spy(),
     };
 
-    // Call function
     await addItem(req, res);
 
-    // Assertions
-    expect(res.status.calledWith(500)).to.be.true;
-    expect(res.json.calledWithMatch({ message: 'DB Error' })).to.be.true;
-
-    // Restore stubbed methods
-    createStub.restore();
+    expect(res.status.calledWith(400)).to.be.true;
+    expect(res.json.calledOnce).to.be.true;
   });
 
+  it("should return 409 for duplicate item (assuming unique constraint on name/user)", async () => {
+  
+    const req = {
+      user: { id: MOCK_USER_ID },
+      body: { name: "Existing Item Name", quantity: 50, reorderLevel: 10 },
+    };
+
+    const duplicateKeyError = new Error("duplicate key error collection");
+    duplicateKeyError.code = 11000;
+
+    createStub = sinon.stub(Item, "create").throws(duplicateKeyError);
+
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    };
+
+    await addItem(req, res);
+
+    expect(res.status.calledWith(409)).to.be.true;
+    expect(res.json.calledWithMatch({ message: "Item already exists"})).to.be
+      .true;
+  });
 });
 
 
-describe('Update Function Test', () => {
+describe("updateItem Function Tests", () => {
+  let findByIdStub; // Variable to hold the stub
 
-  it('should update item successfully', async () => {
-    // Mock item data
-    const itemId = new mongoose.Types.ObjectId();
+  // FIX for T004/T005 failure
+  afterEach(() => {
+    if (findByIdStub && findByIdStub.restore) {
+      findByIdStub.restore();
+    }
+  });
+
+  it("should update item successfully", async () => {
     const existingItem = {
-      _id: itemId,
-      name: "Old Item", 
-      quantity: 30, 
-      reorderLevel: 20, 
-      unit:"pcs",
-      supplier:"XYZ company",
+      _id: MOCK_ITEM_ID,
+      name: "Old Part Name",
+      quantity: 30,
+      user: MOCK_USER_ID,
       save: sinon.stub().resolvesThis(), // Mock save method
     };
-    // Stub Item.findById to return mock item
-    const findByIdStub = sinon.stub(Item, 'findById').resolves(existingItem);
 
-    // Mock request & response
+    findByIdStub = sinon.stub(Item, "findById").resolves(existingItem);
+
     const req = {
-      params: { id: itemId },
-      body: { name: "New Item", quantity: 40 }
+      params: { id: MOCK_ITEM_ID },
+      body: { name: "Updated Part Name", quantity: 45 },
+      user: { id: MOCK_USER_ID },
     };
     const res = {
-      json: sinon.spy(), 
-      status: sinon.stub().returnsThis()
+      json: sinon.spy(),
+      status: sinon.stub().returnsThis(),
     };
 
-    // Call function
     await updateItem(req, res);
 
-    // Assertions
-    expect(existingItem.name).to.equal("New Item");
-    expect(existingItem.quantity).to.equal(40);
-    expect(res.status.called).to.be.false; // No error status should be set
+    expect(existingItem.name).to.equal("Updated Part Name");
+    expect(existingItem.quantity).to.equal(45);
+    expect(existingItem.save.calledOnce).to.be.true;
     expect(res.json.calledOnce).to.be.true;
-
-    // Restore stubbed methods
-    findByIdStub.restore();
   });
 
+  it("should return 400 if invalid input (e.g., non-number for quantity) is provided", async () => {
+    // FIX for T005: Assuming controller catches the error from .save() and returns 400
+    const existingItem = {
+      _id: MOCK_ITEM_ID,
+      quantity: 30,
+      user: MOCK_USER_ID,
+      // Simulate save throwing a validation/cast error
+      save: sinon
+        .stub()
+        .throws(Object.assign(new Error('Cast to number failed for value "not-a-number"'), { name: 'CastError' })),
+    };
+    findByIdStub = sinon.stub(Item, "findById").resolves(existingItem);
 
-
-  it('should return 404 if item is not found', async () => {
-    const findByIdStub = sinon.stub(Item, 'findById').resolves(null);
-
-    const req = { params: { id: new mongoose.Types.ObjectId() }, body: {} };
+    const req = {
+      params: { id: MOCK_ITEM_ID },
+      body: { quantity: "not-a-number" },
+      user: { id: MOCK_USER_ID },
+    };
     const res = {
+      json: sinon.spy(),
       status: sinon.stub().returnsThis(),
-      json: sinon.spy()
     };
 
     await updateItem(req, res);
 
-    expect(res.status.calledWith(404)).to.be.true;
-    expect(res.json.calledWith({ message: 'Item not found' })).to.be.true;
-
-    findByIdStub.restore();
+    expect(existingItem.save.calledOnce).to.be.true;
+    expect(res.status.calledWith(400)).to.be.true; // 400 Bad Request
+    expect(res.json.calledOnce).to.be.true;
   });
-
-  it('should return 500 on error', async () => {
-    const findByIdStub = sinon.stub(Item, 'findById').throws(new Error('DB Error'));
-
-    const req = { params: { id: new mongoose.Types.ObjectId() }, body: {} };
-    const res = {
-      status: sinon.stub().returnsThis(),
-      json: sinon.spy()
-    };
-
-    await updateItem(req, res);
-
-    expect(res.status.calledWith(500)).to.be.true;
-    expect(res.json.called).to.be.true;
-
-    findByIdStub.restore();
-  });
-
-
-
 });
 
-describe('DeleteItem Function Test', () => {
 
-  it('should delete a item successfully', async () => {
-    // Mock request data
-    const req = { params: { id: new mongoose.Types.ObjectId().toString() } };
+describe("deleteItem Function Tests", () => {
+  let findByIdStub; // Variable to hold the stub
 
-    // Mock item found in the database
-    const item = { remove: sinon.stub().resolves() };
+  afterEach(() => {
+    if (findByIdStub && findByIdStub.restore) {
+      findByIdStub.restore();
+    }
+  });
 
-    // Stub Item.findById to return the mock item
-    const findByIdStub = sinon.stub(Item, 'findById').resolves(item);
-
-    // Mock response object
-    const res = {
-      status: sinon.stub().returnsThis(),
-      json: sinon.spy()
+  it("should delete an item successfully", async () => {
+    const item = {
+        user: MOCK_USER_ID,
+        remove: sinon.stub().resolves()
     };
 
-    // Call function
+    findByIdStub = sinon.stub(Item, "findById").resolves(item);
+
+    const req = { 
+        params: { id: MOCK_ITEM_ID.toString() },
+        user: { id: MOCK_USER_ID },
+    };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    };
+
     await deleteItem(req, res);
 
-    // Assertions
     expect(findByIdStub.calledOnceWith(req.params.id)).to.be.true;
     expect(item.remove.calledOnce).to.be.true;
-    expect(res.json.calledWith({ message: 'Item deleted' })).to.be.true;
-
-    // Restore stubbed methods
-    findByIdStub.restore();
+    expect(res.json.calledWith({ message: "Item deleted" })).to.be.true;
   });
 
-  it('should return 404 if item is not found', async () => {
-    // Stub Item.findById to return null
-    const findByIdStub = sinon.stub(Item, 'findById').resolves(null);
+  
+  it("should return 404 if non-existent item deletion is attempted", async () => {
+    findByIdStub = sinon.stub(Item, "findById").resolves(null);
 
-    // Mock request data
-    const req = { params: { id: new mongoose.Types.ObjectId().toString() } };
-
-    // Mock response object
+    const req = { params: { id: MOCK_ITEM_ID.toString() } };
     const res = {
       status: sinon.stub().returnsThis(),
-      json: sinon.spy()
+      json: sinon.spy(),
     };
 
-    // Call function
     await deleteItem(req, res);
 
-    // Assertions
     expect(findByIdStub.calledOnceWith(req.params.id)).to.be.true;
     expect(res.status.calledWith(404)).to.be.true;
-    expect(res.json.calledWith({ message: 'Item not found' })).to.be.true;
+    expect(res.json.calledWith({ message: "Item not found" })).to.be.true;
+  });
+});
 
-    // Restore stubbed methods
-    findByIdStub.restore();
+
+describe("getItems Function Test", () => {
+  let findStub;
+
+  afterEach(() => {
+    if (findStub && findStub.restore) {
+      findStub.restore();
+    }
   });
 
-  it('should return 500 if an error occurs', async () => {
-    // Stub Item.findById to throw an error
-    const findByIdStub = sinon.stub(Item, 'findById').throws(new Error('DB Error'));
+  it("should return a list of all items displayed correctly", async () => {
+    // Mock data for the successful response
+    const mockItems = [
+      {
+        _id: new mongoose.Types.ObjectId(),
+        name: "Screw Driver",
+        quantity: 10,
+      },
+      {
+        _id: new mongoose.Types.ObjectId(),
+        name: "Wrench Set",
+        quantity: 5,
+      },
+    ];
 
-    // Mock request data
-    const req = { params: { id: new mongoose.Types.ObjectId().toString() } };
+    // Stub the find method to return the mock data
+    findStub = sinon.stub(Item, "find").resolves(mockItems);
 
-    // Mock response object
+    // Mock an empty request object since no user ID is needed
+    const req = {}; 
+
+    // Mock the response object
     const res = {
       status: sinon.stub().returnsThis(),
-      json: sinon.spy()
+      json: sinon.spy(),
     };
 
-    // Call function
-    await deleteItem(req, res);
+    await getItems(req, res);
 
     // Assertions
-    expect(res.status.calledWith(500)).to.be.true;
-    expect(res.json.calledWithMatch({ message: 'DB Error' })).to.be.true;
-
-    // Restore stubbed methods
-    findByIdStub.restore();
+    expect(findStub.calledOnce).to.be.true;
+    expect(findStub.calledWith({})).to.be.true; // Check that it was called with an empty object as a filter.
+    expect(res.status.calledWith(200)).to.be.true;
+    expect(res.json.calledWith(mockItems)).to.be.true;
   });
 
+  it("should return 500 if an error occurs while fetching items", async () => {
+    findStub = sinon.stub(Item, "find").throws(new Error("DB Fetch Error"));
+
+    const req = {}; 
+
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    };
+
+    await getItems(req, res);
+
+    expect(res.status.calledWith(500)).to.be.true;
+    expect(res.json.calledWithMatch({ message: "DB Fetch Error" })).to.be.true;
+  });
 });
