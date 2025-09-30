@@ -12,10 +12,12 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gradient-to-r from-cyan-700 to-cyan-500 text-white p-4 flex justify-between items-center">
-      <Link to="/dashboard" className="text-2xl font-bold">Inventory Reorder Alert System</Link>
-      <div>
+      
+      
         {user ? (
           <>
+            <Link to="/dashboard" className="text-2xl font-bold">Inventory Reorder Alert System</Link>
+            <div>
             <Link to="/dashboard" className="mr-4">Alert</Link>
             <Link to="/items" className="mr-4">Inventory</Link>
             <Link to="/profile" className="mr-4">Profile</Link>
@@ -26,9 +28,12 @@ const Navbar = () => {
             >
               Logout
             </button>
+            </div>
           </>
         ) : (
           <>
+            <Link to="/" className="text-2xl font-bold">Inventory Reorder Alert System</Link>
+            <div>
             <Link to="/login" className="mr-4">Login</Link>
             <Link
               to="/register"
@@ -36,9 +41,9 @@ const Navbar = () => {
             >
               Register
             </Link>
+            </div>
           </>
         )}
-      </div>
     </nav>
   );
 };
