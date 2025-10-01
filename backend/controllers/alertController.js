@@ -3,7 +3,6 @@ const Item = require("../models/Item");
 const getItems = async (req, res) => {
   try {
     const items = await Item.find({});
-    // console.log(res.json(items));
     res.json(items);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -15,7 +14,7 @@ const addItem = async (req, res) => {
   const { name, quantity, reorderLevel, unit, supplier } = req.body;
   try {
     const item = await Item.create({
-      user: req.user.id, // Assuming this is needed
+      user: req.user.id, 
       name,
       quantity,
       reorderLevel,
@@ -24,11 +23,11 @@ const addItem = async (req, res) => {
     });
     res.status(201).json(item);
   } catch (error) {
-    // T1 FIX: Duplicate Check (The test expects this 409 status)
+
     if (error.code === 11000) {
         return res.status(409).json({ message: "Item already exists." });
     }
-    // T001/T002 FIX (already passed, leaving logic):
+
     if (error.name === 'ValidationError' || error.name === 'CastError') {
         return res.status(400).json({ message: error.message });
     }
@@ -42,8 +41,6 @@ const updateItem = async (req, res) => {
     const item = await Item.findById(req.params.id);
     if (!item) return res.status(404).json({ message: "Item not found" });
    
-    // T2 FIX: Use ternary operator (?:) or simple assignment to correctly handle updates
-    // if the value is 0, false, or an empty string, while ensuring only defined fields are updated.
     if (name !== undefined) item.name = name;
     if (quantity !== undefined) item.quantity = quantity;
     if (reorderLevel !== undefined) item.reorderLevel = reorderLevel;
@@ -53,7 +50,6 @@ const updateItem = async (req, res) => {
     const updatedItem = await item.save();
     res.json(updatedItem);
   } catch (error) {
-    // T3 FIX: Invalid Input Check
     if (error.name === 'ValidationError' || error.name === 'CastError') {
         return res.status(400).json({ message: error.message });
     }
