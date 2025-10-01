@@ -1,7 +1,9 @@
 const chai = require("chai");
 const sinon = require("sinon");
 const mongoose = require("mongoose");
-const Item = require("../models/Item");
+// const Item = require("../models/Item");
+const Factory = require("../models/Factory");
+const Item = Factory.create('Item');
 const {updateItem,getItems,addItem,deleteItem,} = require("../controllers/alertController");
 const { expect } = chai;
 

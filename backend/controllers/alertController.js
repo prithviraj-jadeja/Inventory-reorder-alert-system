@@ -1,4 +1,7 @@
-const Item = require("../models/Item");
+// const Item = require("../models/Item");
+const Factory = require("../models/Factory");
+const Item = Factory.create('Item');
+
 
 const getItems = async (req, res) => {
   try {
