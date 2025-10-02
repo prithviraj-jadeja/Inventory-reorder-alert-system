@@ -2,19 +2,29 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 import loginImg from './image1.svg'
+import { successModal, errorModal } from "../components/ModalTemplates"; 
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [modal, setModal] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axiosInstance.post('/api/auth/register', formData);
-      alert('Registration successful. Please log in.');
-      navigate('/login');
+      setModal(successModal.clone({ message: "Registration successful. Please log in.",
+      onclose: () => {
+        //setModal(null);
+        navigate("/login");
+      },
+    })
+  );
     } catch (error) {
-      alert('Registration failed. Please try again.');
+      setModal(errorModal.clone({ message: "Registration failed. Please try again.",
+      onclose: () => setModal(null),
+    })
+      );
     }
   };
 
@@ -48,6 +58,9 @@ const Register = () => {
           Register
         </button>
       </form>
+      
+      {/*only show the modal if it exists, and give it the ability to close itself*/}
+      {modal && modal.render(() => setModal(null))}
     </div>
   );
 };
