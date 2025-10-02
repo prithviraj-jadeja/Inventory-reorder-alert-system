@@ -5,12 +5,12 @@ function LandingPage() {
     <div className="min-h-screen flex flex-col bg-white ">
       {/* Header */}
       <header className="text-align-left text-cyan-700 p-4 flex justify-between items-center">
-        <container>
+        <div className="container mx-auto">
 
           <h1 className="text-4xl font-bold">InCo.</h1>
           <p className="text-lg italic"> Your goodies under control</p>
 
-        </container>
+        </div>
       </header>
 
       {/* Main Sections */}
