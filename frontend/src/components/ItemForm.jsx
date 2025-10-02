@@ -23,13 +23,22 @@ const ItemForm = ({ items, setItems, editingItem, setEditingItem }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Prepare the data for submission
+      const submissionData = {
+        ...formData,
+        leadTime: parseInt(formData.leadTime) || 7,
+        supplier: {
+          name: formData.supplier.name
+        }
+      };
+      let response;
       if (editingItem) {
-        const response = await axiosInstance.put(`/api/items/${editingItem._id}`, formData, {
+         response = await axiosInstance.put(`/api/items/${editingItem._id}`, submissionData, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setItems(items.map((item) => (item._id === response.data._id ? response.data : item)));
       } else {
-        const response = await axiosInstance.post('/api/items', formData, {
+         response = await axiosInstance.post('/api/items', submissionData, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setItems([...items, response.data]);
@@ -37,6 +46,7 @@ const ItemForm = ({ items, setItems, editingItem, setEditingItem }) => {
       setEditingItem(null);
       setFormData({ name: '', quantity: '', reorderLevel: '', unit: '', supplier: '' });
     } catch (error) {
+      console.log("error", error)
       alert('Failed to save item.');
     }
   };

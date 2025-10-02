@@ -1,25 +1,17 @@
+// config/db.js
 const mongoose = require("mongoose");
+//singleton 
+// Set strictQuery explicitly to suppress the warning
+mongoose.set('strictQuery', false);
 
-let connectionInstance = null; 
-
-class Database {
-  constructor() {
-    if (connectionInstance) {
-
-      throw new Error("A single database connection instance already exists!");
-    }
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);  // Remove deprecated options
+    console.log("MongoDB connected successfully");
+  } catch (error) {
+    console.error("MongoDB connection error:", error.message);
+    process.exit(1);
   }
+};
 
-  static async connect() {
-    if (!connectionInstance) {
-      connectionInstance = await mongoose.connect(process.env.MONGO_URI);
-      console.log("MongoDB connected successfully");
-    }
-
-    return connectionInstance;
-  }
-}
-
-
-Object.freeze(Database);
-module.exports = Database;
+module.exports = connectDB;
