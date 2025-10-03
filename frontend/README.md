@@ -70,3 +70,14 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
 
+### fix Blank page error
+To fix Icone issue, fi blank page:
+After install 
+npm install react-icons
+OR
+yarn add react-icons
+
+Run
+npm install react-icons@4.11.0
+OR
+yarn add react-icons@4.11.0
