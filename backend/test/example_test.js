@@ -1,14 +1,16 @@
 const chai = require("chai");
 const sinon = require("sinon");
 const mongoose = require("mongoose");
-const Item = require("../models/Item");
+// const Item = require("../models/Item");
+const Factory = require("../models/Factory");
+const Item = Factory.create('Item');
 const {updateItem,getItems,addItem,deleteItem,} = require("../controllers/alertController");
 const { expect } = chai;
 
 const MOCK_USER_ID = new mongoose.Types.ObjectId();
 const MOCK_ITEM_ID = new mongoose.Types.ObjectId();
 
-describe("addItem Function Tests", () => {
+describe("addItem Test", () => {
   let createStub; 
   afterEach(() => {
     if (createStub && createStub.restore) {
@@ -16,15 +18,15 @@ describe("addItem Function Tests", () => {
     }
   });
 
-  it("should create a new Item successfully", async () => {
+  it("should create a new Item", async () => {
     const req = {
       user: { id: MOCK_USER_ID },
       body: {
-        name: "New Inventory Part",
+        name: "New Item",
         quantity: 50,
         reorderLevel: 10,
         unit: "units",
-        supplier: "Supplier A",
+        supplier: "Supplier ABC",
       },
     };
     const createdItem = { _id: MOCK_ITEM_ID, ...req.body, user: MOCK_USER_ID };
@@ -43,19 +45,19 @@ describe("addItem Function Tests", () => {
     expect(res.json.calledWith(createdItem)).to.be.true;
   });
 
-  it('should return 400 if item name is missing (Adapting "without task title")', async () => {
+  it('should return 400 if item name is missing', async () => {
     const req = {
       user: { id: MOCK_USER_ID },
       body: {
         quantity: 50,
         reorderLevel: 10,
         unit: "units",
-        supplier: "Supplier A",
+        supplier: "Supplier ABC",
       },
     };
 
     const validationError = new Error(
-      "Item validation failed: name: Path `name` is required."
+      "`Name is required."
     );
     validationError.name = "ValidationError";
 
@@ -98,10 +100,9 @@ describe("addItem Function Tests", () => {
 });
 
 
-describe("updateItem Function Tests", () => {
-  let findByIdStub; // Variable to hold the stub
+describe("updateItem Test", () => {
+  let findByIdStub; 
 
-  // FIX for T004/T005 failure
   afterEach(() => {
     if (findByIdStub && findByIdStub.restore) {
       findByIdStub.restore();
@@ -114,7 +115,7 @@ describe("updateItem Function Tests", () => {
       name: "Old Part Name",
       quantity: 30,
       user: MOCK_USER_ID,
-      save: sinon.stub().resolvesThis(), // Mock save method
+      save: sinon.stub().resolvesThis(),
     };
 
     findByIdStub = sinon.stub(Item, "findById").resolves(existingItem);
@@ -137,16 +138,14 @@ describe("updateItem Function Tests", () => {
     expect(res.json.calledOnce).to.be.true;
   });
 
-  it("should return 400 if invalid input (e.g., non-number for quantity) is provided", async () => {
-    // FIX for T005: Assuming controller catches the error from .save() and returns 400
+  it("should return 400 if invalid input", async () => {
     const existingItem = {
       _id: MOCK_ITEM_ID,
       quantity: 30,
       user: MOCK_USER_ID,
-      // Simulate save throwing a validation/cast error
       save: sinon
         .stub()
-        .throws(Object.assign(new Error('Cast to number failed for value "not-a-number"'), { name: 'CastError' })),
+        .throws(Object.assign(new Error('failed for value not-a-number'), { name: 'CastError' })),
     };
     findByIdStub = sinon.stub(Item, "findById").resolves(existingItem);
 
@@ -163,14 +162,14 @@ describe("updateItem Function Tests", () => {
     await updateItem(req, res);
 
     expect(existingItem.save.calledOnce).to.be.true;
-    expect(res.status.calledWith(400)).to.be.true; // 400 Bad Request
+    expect(res.status.calledWith(400)).to.be.true; 
     expect(res.json.calledOnce).to.be.true;
   });
 });
 
 
-describe("deleteItem Function Tests", () => {
-  let findByIdStub; // Variable to hold the stub
+describe("deleteItem Test", () => {
+  let findByIdStub;
 
   afterEach(() => {
     if (findByIdStub && findByIdStub.restore) {
@@ -178,7 +177,7 @@ describe("deleteItem Function Tests", () => {
     }
   });
 
-  it("should delete an item successfully", async () => {
+  it("should delete an item", async () => {
     const item = {
         user: MOCK_USER_ID,
         remove: sinon.stub().resolves()
@@ -203,7 +202,7 @@ describe("deleteItem Function Tests", () => {
   });
 
   
-  it("should return 404 if non-existent item deletion is attempted", async () => {
+  it("should return 404 if non-existent", async () => {
     findByIdStub = sinon.stub(Item, "findById").resolves(null);
 
     const req = { params: { id: MOCK_ITEM_ID.toString() } };

@@ -6,10 +6,9 @@ class Database {
   constructor() {
     if (connectionInstance) {
 
-      throw new Error("A single database connection instance already exists!");
+      throw new Error("Database connection already exists!");
     }
   }
-
   static async connect() {
     if (!connectionInstance) {
       connectionInstance = await mongoose.connect(process.env.MONGO_URI);
