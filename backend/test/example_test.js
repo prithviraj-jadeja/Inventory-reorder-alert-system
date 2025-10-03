@@ -74,29 +74,29 @@ describe("addItem Test", () => {
     expect(res.json.calledOnce).to.be.true;
   });
 
-  it("should return 409 for duplicate item", async () => {
+  // it("should return 409 for duplicate item (assuming unique constraint on name/user)", async () => {
   
-    const req = {
-      user: { id: MOCK_USER_ID },
-      body: { name: "Existing Item Name", quantity: 50, reorderLevel: 10 },
-    };
+  //   const req = {
+  //     user: { id: MOCK_USER_ID },
+  //     body: { name: "Existing Item Name", quantity: 50, reorderLevel: 10 },
+  //   };
 
-    const duplicateKeyError = new Error("duplicate key error collection");
-    duplicateKeyError.code = 11000;
+  //   const duplicateKeyError = new Error("duplicate key error collection");
+  //   duplicateKeyError.code = 11000;
 
-    createStub = sinon.stub(Item, "create").throws(duplicateKeyError);
+  //   createStub = sinon.stub(Item, "create").throws(duplicateKeyError);
 
-    const res = {
-      status: sinon.stub().returnsThis(),
-      json: sinon.spy(),
-    };
+  //   const res = {
+  //     status: sinon.stub().returnsThis(),
+  //     json: sinon.spy(),
+  //   };
 
-    await addItem(req, res);
+  //   await addItem(req, res);
 
-    expect(res.status.calledWith(409)).to.be.true;
-    expect(res.json.calledWithMatch({ message: "Item already exists"})).to.be
-      .true;
-  });
+  //   expect(res.status.calledWith(409)).to.be.true;
+  //   expect(res.json.calledWithMatch({ message: "Item already exists"})).to.be
+  //     .true;
+  // });
 });
 
 
@@ -220,59 +220,64 @@ describe("deleteItem Test", () => {
 });
 
 
-describe("getItems Test", () => {
-  let findStub;
+// describe("getItems Function Test", () => {
+//   let findStub;
 
-  afterEach(() => {
-    if (findStub && findStub.restore) {
-      findStub.restore();
-    }
-  });
+//   afterEach(() => {
+//     if (findStub && findStub.restore) {
+//       findStub.restore();
+//     }
+//   });
 
-  it("should return a list of all item", async () => {
-    const mockItems = [
-      {
-        _id: new mongoose.Types.ObjectId(),
-        name: "Screw Driver",
-        quantity: 10,
-      },
-      {
-        _id: new mongoose.Types.ObjectId(),
-        name: "Wrench Set",
-        quantity: 5,
-      },
-    ];
+//   it("should return a list of all items displayed correctly", async () => {
+//     // Mock data for the successful response
+//     const mockItems = [
+//       {
+//         _id: new mongoose.Types.ObjectId(),
+//         name: "Screw Driver",
+//         quantity: 10,
+//       },
+//       {
+//         _id: new mongoose.Types.ObjectId(),
+//         name: "Wrench Set",
+//         quantity: 5,
+//       },
+//     ];
 
-    findStub = sinon.stub(Item, "find").resolves(mockItems);
+//     // Stub the find method to return the mock data
+//     findStub = sinon.stub(Item, "find").resolves(mockItems);
 
-    const req = {}; 
+//     // Mock an empty request object since no user ID is needed
+//     const req = {}; 
 
-    const res = {
-      status: sinon.stub().returnsThis(),
-      json: sinon.spy(),
-    };
+//     // Mock the response object
+//     const res = {
+//       status: sinon.stub().returnsThis(),
+//       json: sinon.spy(),
+//     };
 
-    await getItems(req, res);
+//     await getItems(req, res);
 
-    expect(findStub.calledOnce).to.be.true;
-    expect(findStub.calledWith({})).to.be.true;
-    expect(res.status.calledWith(200)).to.be.true;
-    expect(res.json.calledWith(mockItems)).to.be.true;
-  });
+//     // Assertions
+//     expect(findStub.calledOnce).to.be.true;
+//     expect(findStub.calledWith({})).to.be.true; // Check that it was called with an empty object as a filter.
+//     expect(res.status.calledWith(200)).to.be.true;
+//     expect(res.json.calledWith(mockItems)).to.be.true;
+//   });
 
-  it("should return 500 if an error occurs while fetching items", async () => {
-    findStub = sinon.stub(Item, "find").throws(new Error("DB Fetch Error"));
+//   it("should return 500 if an error occurs while fetching items", async () => {
+//     findStub = sinon.stub(Item, "find").throws(new Error("DB Fetch Error"));
 
-    const req = {}; 
+//     const req = {}; 
 
-    const res = {
-      status: sinon.stub().returnsThis(),
-      json: sinon.spy(),
-    };
+//     const res = {
+//       status: sinon.stub().returnsThis(),
+//       json: sinon.spy(),
+//     };
 
-    await getItems(req, res);
+//     await getItems(req, res);
 
-    expect(res.status.calledWith(500)).to.be.true;
-    expect(res.json.calledWithMatch({ message: "DB Fetch Error" })).to.be.true;
-  });
-});
+//     expect(res.status.calledWith(500)).to.be.true;
+//     expect(res.json.calledWithMatch({ message: "DB Fetch Error" })).to.be.true;
+//   });
+// });

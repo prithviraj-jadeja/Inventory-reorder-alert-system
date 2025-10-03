@@ -14,7 +14,7 @@ Tech Stack:
 
 Getting started:
 1.	Clone the repository: git clone https://github.com/prithviraj-jadeja/Inventory-reorder-alert-system.git
-2.	Install dependencies: npm install
+2.	Install dependencies: npm install  
 3.	Environment configuration: Create a .env file  and provide the following details. 
     a.	PORT=5000
     b.	MONGO_URI= your mongo db connection string
