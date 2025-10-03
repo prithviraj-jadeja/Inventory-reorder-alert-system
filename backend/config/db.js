@@ -14,7 +14,6 @@ const connectDB = async () => {
     console.log("MongoDB connected successfully");
   } catch (error) {
     console.error("MongoDB connection error:__", error.message);
-    console.log("<<<<<<<<<<<<<<<uri>>>>>>>>>>>>>>>",process.env.MONGO_URI)
     process.exit(1);
   }
 };

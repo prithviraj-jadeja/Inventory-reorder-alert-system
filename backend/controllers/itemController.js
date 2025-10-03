@@ -29,6 +29,24 @@ const addItem = async (req, res) => {
   }
 };
 
+const updateItem = async (req, res) => {
+  try {
+    const { id } = req.params; // item ID comes from URL
+    const itemData = ItemFactory.create(req.body); // validate/transform request body
+
+    const updatedItem = await ItemRepository.update(id, itemData);
+
+    if (!updatedItem) {
+      return res.status(404).json({ success: false, message: "Item not found" });
+    }
+
+    res.status(200).json({ success: true, data: updatedItem });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+
 const updateItemStock = async (req, res) => {
   try {
     const { id } = req.params;
@@ -54,4 +72,4 @@ const deleteItem = async (req, res) => {
   }
 }
 
-module.exports = { getItems, addItem, updateItemStock, deleteItem };
+module.exports = { getItems, addItem, updateItemStock, updateItem, deleteItem };

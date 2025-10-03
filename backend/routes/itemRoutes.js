@@ -3,12 +3,13 @@ const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
 
-const { getItems, addItem, updateItemStock, deleteItem } = require('../controllers/itemController');
+const { getItems, addItem, updateItem, updateItemStock, deleteItem } = require('../controllers/itemController');
 
 router.use(protect);
 
 router.get('/', getItems);
 router.post('/', addItem);
+router.put("/items/:id", updateItem);
 router.patch('/:id/stock', updateItemStock); // Changed to PATCH for semantic stock updates
 router.delete('/:id', deleteItem);
 

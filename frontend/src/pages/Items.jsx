@@ -71,6 +71,7 @@ const Items = () => {
 
   const handleItemDelete = (itemId) => {
     setItems(prevItems => prevItems.filter(item => item._id !== itemId));
+    fetchItems(1, filters);
   };
 
   // Filter handlers
