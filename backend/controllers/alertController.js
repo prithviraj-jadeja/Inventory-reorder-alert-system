@@ -1,4 +1,3 @@
-// const Item = require("../models/Item");
 const Factory = require("../models/Factory");
 const Item = Factory.create('Item');
 
