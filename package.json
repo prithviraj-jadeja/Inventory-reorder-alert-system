@@ -16,6 +16,6 @@
   "author": "Inventory Manager Team",
   "license": "ISC",
   "dependencies": {
-    "react-icons": "4.11.0"
+    "react-icons": "5.5.0"
   }
 }
