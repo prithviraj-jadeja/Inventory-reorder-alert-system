@@ -59,6 +59,7 @@ jobs:
         yarn install
         yarn run build
 
+
     # Run backend tests
     - name: Run Backend Tests
       env:
@@ -67,6 +68,7 @@ jobs:
         PORT: ${{ secrets.PORT }}
       working-directory: ./backend
       run: npm test
+
 
     - run: npm ci
     - run: | 
