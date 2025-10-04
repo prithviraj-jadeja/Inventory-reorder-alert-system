@@ -11,6 +11,7 @@ Tech Stack:
 •	Frontend: HTML, CSS, JavaScript.
 •	Backend: Node.js / Express (API & Services)
 •	Database: MongoDB (User and Item Collections)
+•	Design pattern: Singleton, Factory
 
 Getting started:
 1.	Clone the repository: git clone https://github.com/prithviraj-jadeja/Inventory-reorder-alert-system.git
