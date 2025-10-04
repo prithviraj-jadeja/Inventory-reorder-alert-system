@@ -22,12 +22,11 @@ Getting started:
 4.	Run the application: npm start
 
 EC2 Instance Name and ID: 
-SDLCApp (instance id : i-0897228f0dec113e9)
-Public IP : 52.65.233.83
+alert-management (instance id : i-027a173873a0c8439)
+Public IP : 3.106.56.126
 
 EC2 Instance Link: 
-https://ap-southeast-2.console.aws.amazon.com/ec2/home?region=ap-southeast-2#InstanceDetails:instanceId=i-0897228f0dec113e9
-https://ap-southeast-2.console.aws.amazon.com/ec2/home?region=ap-southeast-2#Instances:tag:Name=SDLCApp;v=3;$case=tags:true%5C,client:false;$regex=tags:false%5C,client:false
+https://ap-southeast-2.console.aws.amazon.com/ec2/home?region=ap-southeast-2#InstanceDetails:instanceId=i-027a173873a0c8439
 
 UserName and password for project:
 
