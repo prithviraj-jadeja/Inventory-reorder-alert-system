@@ -11,7 +11,8 @@ Tech Stack:
 •	Frontend: HTML, CSS, JavaScript.
 •	Backend: Node.js / Express (API & Services)
 •	Database: MongoDB (User and Item Collections)
-•	Design pattern: Singleton, Factory
+•	Design pattern: Singleton, Factory,Strategy, Decorator, Proxy, Prototype
+•	OOPs concept: Abstraction, Encapsulation, Polymorphism, Singleton
 
 Getting started:
 1.	Clone the repository: git clone https://github.com/prithviraj-jadeja/Inventory-reorder-alert-system.git
