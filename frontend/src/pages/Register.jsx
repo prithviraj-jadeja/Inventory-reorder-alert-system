@@ -14,7 +14,7 @@ const Register = () => {
     try {
       await axiosInstance.post('/api/auth/register', formData);
       setModal(successModal.clone({ message: "Registration successful. Please log in.",
-      onclose: () => {
+      onClose: () => {
         //setModal(null);
         navigate("/login");
       },
@@ -22,7 +22,7 @@ const Register = () => {
   );
     } catch (error) {
       setModal(errorModal.clone({ message: "Registration failed. Please try again.",
-      onclose: () => setModal(null),
+      onClose: () => setModal(null),
     })
       );
     }
