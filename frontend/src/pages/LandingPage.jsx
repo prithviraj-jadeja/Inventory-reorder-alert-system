@@ -17,8 +17,7 @@ function LandingPage() {
       <main className="flex-grow grid grid-cols-1 gap-6 px-8 py-12">
 
         <h2 className="text-3xl text-center text-cyan-700 font-bold mb-2">About us</h2>
-        <p className="text-lg text-gray-600 leading-relaxed">     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id hendrerit diam. Quisque cursus imperdiet leo, sit amet rutrum neque faucibus faucibus. Nam at aliquet sem. Vivamus mi lorem, consectetur ac hendrerit sit amet, laoreet in diam. Duis in leo eu odio mollis commodo eu ut risus.
-          Mauris euismod nunc nisl, convallis facilisis elit vestibulum vel..</p>
+        <p className="text-lg text-gray-600 text-justify leading-relaxed">     The Inventory Reorder Alert System enables users to manage their inventory items effectively streamlining business operations. Built with a user-friendly interface, the system enables users to create, view, update, and delete product items. Users can also manage inventory items at their threshold level. Once the product item quantity drops below its threshold, the item is highlighted on the alert dashboard. Furthermore, the system includes secure user authentication, allowing individuals to sign up and log in to their accounts. It provides profile management and product details. The design ensures a seamless user experience and boosts productivity in both personal and professional workspaces.</p>
 
 
         {/* Features & Memberships */}
